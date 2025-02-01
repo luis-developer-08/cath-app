@@ -46,7 +46,6 @@ class TransactionCrudController extends Controller
         return response()->json($transactions);
     }
 
-
     public function getTransaction($id)
     {
         $transaction = Transaction::with('student.year', 'student.bachelor')->find($id);
@@ -358,11 +357,12 @@ class TransactionCrudController extends Controller
                 // Process LOA and Returning Year
                 $loaParts = explode(',', strtolower(trim($row[6] ?? '')));
                 $loaSemester = isset($loaParts[0]) ? trim(str_replace('sem', '', $loaParts[0])) : null;
-                $loaYear = $loaParts[1] ?? null;
+                $loaYear = isset($loaParts[1]) ? trim($loaParts[1]) : null;
+
 
                 $returningParts = explode(',', strtolower(trim($row[7] ?? '')));
                 $returningSemester = isset($returningParts[0]) ? trim(str_replace('sem', '', $returningParts[0])) : null;
-                $returningYear = $returningParts[1] ?? null;
+                $returningYear = isset($returningParts[1]) ? trim($returningParts[1]) : null;
 
                 // Fetch or Create Related Models
                 $year = Year::whereRaw('LOWER(name) = ?', [$yearName])->first();
