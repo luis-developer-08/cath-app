@@ -81,19 +81,20 @@ export default function Dashboard() {
                                                 }
                                             }}
                                         />
-                                        {/* <div className="flex gap-2">
+                                        <div className="join">
                                             <input
                                                 type="file"
                                                 accept=".csv"
                                                 onChange={handleFileChange}
+                                                className="file-input file-input-bordered file-input-sm rounded-sm w-56 join-item"
                                             />
                                             <button
-                                                className="btn btn-primary"
+                                                className="btn bg-base-300 btn-sm rounded-sm join-item"
                                                 onClick={handleUpload}
                                             >
                                                 Upload CSV
                                             </button>
-                                        </div> */}
+                                        </div>
                                     </div>
                                     <TransactionTable />
                                 </div>

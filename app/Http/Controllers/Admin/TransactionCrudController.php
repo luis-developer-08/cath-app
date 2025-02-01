@@ -383,9 +383,9 @@ class TransactionCrudController extends Controller
                 }
 
                 // Insert Student Record
-                $student = Student::firstOrCreate(
-                    ['student_number' => $studentId],
+                $student = Student::create(
                     [
+                        'student_number' => $studentId,
                         'first_name' => $firstName,
                         'middle_name' => $middleName,
                         'last_name' => $lastName,

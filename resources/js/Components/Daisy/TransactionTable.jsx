@@ -90,7 +90,9 @@ const TransactionTable = () => {
                         {transactions.data.map((transaction, index) => (
                             <tr key={index} className="hover">
                                 <td>{transaction.student.student_number}</td>
-                                <td>{`${transaction.student.first_name} ${
+                                <td className="capitalize">{`${
+                                    transaction.student.first_name
+                                } ${
                                     transaction.student.middle_name
                                         ? transaction.student.middle_name
                                         : ""
