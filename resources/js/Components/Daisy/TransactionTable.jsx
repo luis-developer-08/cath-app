@@ -190,7 +190,7 @@ const TransactionTable = () => {
                     {transactions.links.map((link, index) => (
                         <div
                             key={index}
-                            className={`join-item btn  btn-sm ${
+                            className={`join-item btn btn-sm rounded-sm ${
                                 link.active ? "bg-base-100" : "bg-base-300"
                             }`}
                             dangerouslySetInnerHTML={{ __html: link.label }}

@@ -158,7 +158,7 @@ const InsertForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="overflow-y-auto h-[60vh] px-2">
+            <div className="overflow-y-auto h-[61vh] px-2">
                 <div className="space-y-2 w-full mb-10">
                     <div className="flex gap-2 w-full items-center">
                         <label
@@ -492,7 +492,10 @@ const InsertForm = () => {
                 </div>
             </div>
             <div className="px-2 py-5">
-                <button className="btn bg-base-300 w-full" type="submit">
+                <button
+                    className="btn bg-base-300 w-full rounded-sm btn-sm"
+                    type="submit"
+                >
                     Submit
                 </button>
             </div>
