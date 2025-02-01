@@ -78,36 +78,36 @@ class TransactionCrudController extends Controller
                 'reason' => 'nullable|string',
             ]);
 
-            // Check if the student already exists using the student number
-            $year = Year::where('name', $validated['year'])->first();
-            $bachelor = Bachelor::where('name', $validated['bachelor'])->first();
+            // Sanitize data (trim + lowercase)
+            $sanitized = array_map(function ($value) {
+                return is_string($value) ? strtolower(trim($value)) : $value;
+            }, $validated);
 
+            // Fetch Year and Bachelor
+            $year = Year::where('name', $sanitized['year'])->first();
+            $bachelor = Bachelor::where('name', $sanitized['bachelor'])->first();
 
-            $student = Student::firstOrCreate(
-                ['student_number' => $validated['studentNumber']],
-                [
-                    'first_name' => $validated['fname'],
-                    'middle_name' => $validated['mname'],
-                    'last_name' => $validated['lname'],
-                    'suffix' => $validated['suffix'],
-                    'contact_number' => $validated['contact_number'],
-                    'email' => $validated['email'],
-                    'year_id' => $year->id, // Assuming you have a Year model to link the year
-                    'bachelor_id' => $bachelor->id, // Assuming you have a Bachelor model to link the bachelor program
-                ]
-            );
-
-            // Create the transaction
-            $transaction = Transaction::create([
-                'student_id' => $student->id,
-                'loa_semester' => $validated['sem_eff_loa'],
-                'loa_year' => $validated['year_eff_loa'],
-                're_semester' => $validated['sem_re'],
-                're_year' => $validated['year_re'],
-                'reason' => $validated['reason'],
+            $student = Student::create([
+                'student_number' => $sanitized['studentNumber'],
+                'first_name' => $sanitized['fname'],
+                'middle_name' => $sanitized['mname'],
+                'last_name' => $sanitized['lname'],
+                'suffix' => $sanitized['suffix'],
+                'contact_number' => $sanitized['contact_number'],
+                'email' => $validated['email'], // Keep email case-sensitive
+                'year_id' => $year?->id,
+                'bachelor_id' => $bachelor?->id,
             ]);
 
-            // Return a success response
+            $transaction = Transaction::create([
+                'student_id' => $student->id,
+                'loa_semester' => $sanitized['sem_eff_loa'],
+                'loa_year' => $sanitized['year_eff_loa'],
+                're_semester' => $sanitized['sem_re'],
+                're_year' => $sanitized['year_re'],
+                'reason' => $sanitized['reason'],
+            ]);
+
             return response()->json([
                 'message' => 'Transaction created successfully',
                 'transaction' => $transaction,
@@ -140,59 +140,48 @@ class TransactionCrudController extends Controller
                 'reason' => 'nullable|string',
             ]);
 
-            // return response()->json($validated);
+            // Sanitize data (trim + lowercase)
+            $sanitized = array_map(function ($value) {
+                return is_string($value) ? strtolower(trim($value)) : $value;
+            }, $validated);
 
-            // Fetch year and bachelor program based on the provided names
-            $year = Year::where('name', $validated['year'])->first();
-            $bachelor = Bachelor::where('name', $validated['bachelor'])->first();
+            $year = Year::where('name', $sanitized['year'])->first();
+            $bachelor = Bachelor::where('name', $sanitized['bachelor'])->first();
 
             if (!$year || !$bachelor) {
-                return response()->json([
-                    'message' => 'Invalid year or bachelor program',
-                ], 400);
+                return response()->json(['message' => 'Invalid year or bachelor program'], 400);
             }
 
-            // Find the existing student and update their details
-
-
-            // Find the transaction and update it
             $transaction = Transaction::find($transactionId);
+            if (!$transaction) {
+                return response()->json(['message' => 'Transaction not found'], 404);
+            }
 
-            $student = Student::find($transaction->student_id)->first();
-
+            $student = Student::find($transaction->student_id);
             if (!$student) {
-                return response()->json([
-                    'message' => 'Student not found',
-                ], 404);
+                return response()->json(['message' => 'Student not found'], 404);
             }
 
             $student->update([
-                'student_number' => $validated['studentNumber'],
-                'first_name' => $validated['fname'],
-                'middle_name' => $validated['mname'],
-                'last_name' => $validated['lname'],
-                'suffix' => $validated['suffix'],
-                'contact_number' => $validated['contact_number'],
-                'email' => $validated['email'],
-                'year_id' => $year->id,
-                'bachelor_id' => $bachelor->id,
+                'student_number' => $sanitized['studentNumber'],
+                'first_name' => $sanitized['fname'],
+                'middle_name' => $sanitized['mname'],
+                'last_name' => $sanitized['lname'],
+                'suffix' => $sanitized['suffix'],
+                'contact_number' => $sanitized['contact_number'],
+                'email' => $validated['email'], // Keep email case-sensitive
+                'year_id' => $year?->id,
+                'bachelor_id' => $bachelor?->id,
             ]);
-
-            if (!$transaction) {
-                return response()->json([
-                    'message' => 'Transaction not found',
-                ], 404);
-            }
 
             $transaction->update([
-                'loa_semester' => $validated['sem_eff_loa'],
-                'loa_year' => $validated['year_eff_loa'],
-                're_semester' => $validated['sem_re'],
-                're_year' => $validated['year_re'],
-                'reason' => $validated['reason'],
+                'loa_semester' => $sanitized['sem_eff_loa'],
+                'loa_year' => $sanitized['year_eff_loa'],
+                're_semester' => $sanitized['sem_re'],
+                're_year' => $sanitized['year_re'],
+                'reason' => $sanitized['reason'],
             ]);
 
-            // Return a success response
             return response()->json([
                 'message' => 'Transaction updated successfully',
                 'transaction' => $transaction,
@@ -204,6 +193,7 @@ class TransactionCrudController extends Controller
             ], 500);
         }
     }
+
 
     public function deleteTransaction($transactionId)
     {
