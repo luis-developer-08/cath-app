@@ -10,6 +10,7 @@ const InsertForm = () => {
         fname: "",
         mname: "",
         lname: "",
+        suffix: "",
         year: "",
         bachelor: "",
         contact_number: "",
@@ -95,6 +96,8 @@ const InsertForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log(formData);
+
         let errors = [];
 
         if (!formData.studentNumber) errors.push("Student Number is required.");
@@ -135,6 +138,7 @@ const InsertForm = () => {
                     fname: "",
                     mname: "",
                     lname: "",
+                    suffix: "",
                     year: "",
                     bachelor: "",
                     contact_number: "",
@@ -224,6 +228,23 @@ const InsertForm = () => {
                                 type="text"
                                 className="input input-bordered w-full input-sm"
                                 value={formData.lname}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="flex gap-2 w-full items-center">
+                        <label
+                            htmlFor="suffix"
+                            className="label w-2/5 text-nowrap"
+                        >
+                            Suffix:
+                        </label>
+                        <div className="w-3/5 flex justify-end">
+                            <input
+                                id="suffix"
+                                type="text"
+                                className="input input-bordered w-full input-sm"
+                                value={formData.suffix}
                                 onChange={handleInputChange}
                             />
                         </div>

@@ -21,5 +21,6 @@ Route::post('/transactions', [TransactionCrudController::class, 'store']);
 Route::put('/transactions/{id}', [TransactionCrudController::class, 'updateTransaction']);
 Route::delete('/transactions/{id}', [TransactionCrudController::class, 'deleteTransaction']);
 
-Route::get('generateCsv', [TransactionCrudController::class, 'generateCsv']);
-Route::get('generateExcel', [TransactionCrudController::class, 'generateExcel']);
+Route::get('/generateCsv', [TransactionCrudController::class, 'generateCsv']);
+Route::get('/generateExcel', [TransactionCrudController::class, 'generateExcel']);
+Route::post('/importCsv', [TransactionCrudController::class, 'importCsv']);

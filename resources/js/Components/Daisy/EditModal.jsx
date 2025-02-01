@@ -17,6 +17,7 @@ const EditModal = () => {
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [suffix, setSuffix] = useState("");
     const [year, setYear] = useState("");
     const [degree, setDegree] = useState("");
     const [contactNumber, setContactNumber] = useState("");
@@ -133,6 +134,7 @@ const EditModal = () => {
             fname: firstName,
             mname: middleName,
             lname: lastName,
+            suffix: suffix,
             year,
             bachelor: degree,
             contact_number: contactNumber,
@@ -153,6 +155,7 @@ const EditModal = () => {
             setStudentNumber(studentData.student_number || "");
             setFirstName(studentData.first_name || "");
             setMiddleName(studentData.middle_name || "");
+            setSuffix(studentData.suffix || "");
             setLastName(studentData.last_name || "");
             setYear(studentData.year?.name || "");
             setDegree(studentData.bachelor?.name || "");
@@ -219,7 +222,7 @@ const EditModal = () => {
                             </div>
 
                             {/* Names */}
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-4 gap-4">
                                 <div>
                                     <label className="label">First Name</label>
                                     <input
@@ -249,6 +252,17 @@ const EditModal = () => {
                                         value={lastName}
                                         onChange={(e) =>
                                             setLastName(e.target.value)
+                                        }
+                                        className="input input-bordered w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="label">Suffix</label>
+                                    <input
+                                        type="text"
+                                        value={suffix}
+                                        onChange={(e) =>
+                                            setSuffix(e.target.value)
                                         }
                                         className="input input-bordered w-full"
                                     />

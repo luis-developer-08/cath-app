@@ -1,4 +1,5 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
+import Footer from "@/Components/Daisy/Footer";
 import Navbar from "@/Components/Daisy/Navbar";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
@@ -174,6 +175,7 @@ export default function AuthenticatedLayout({ header, children }) {
             )} */}
 
             <main className="flex-1 bg-base-200">{children}</main>
+            <Footer />
         </div>
     );
 }

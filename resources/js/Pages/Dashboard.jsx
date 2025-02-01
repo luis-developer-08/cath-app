@@ -1,9 +1,53 @@
 import InsertForm from "@/Components/Daisy/InsertForm";
 import TransactionTable from "@/Components/Daisy/TransactionTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Dashboard() {
+    const [file, setFile] = useState(null);
+
+    const { url } = usePage();
+    const urlParams = new URLSearchParams(url.split("?")[1]);
+    const initialQuery = urlParams.get("query") || "";
+
+    const [query, setQuery] = useState(initialQuery);
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    };
+
+    const handleFilter = () => {
+        const params = new URLSearchParams();
+        if (query) params.append("query", query);
+
+        router.visit(`?${params.toString()}`);
+    };
+
+    const handleUpload = async () => {
+        if (!file) {
+            alert("Please select a CSV file first.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const response = await axios.post("/api/importCsv", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            alert(response.data.message);
+        } catch (error) {
+            alert(
+                "Error uploading file: " + error.response?.data?.error ||
+                    "Unknown error"
+            );
+        }
+    };
+
     return (
         <AuthenticatedLayout
             header={
@@ -22,20 +66,34 @@ export default function Dashboard() {
                                 <div className="p-6 text-gray-900 w-full">
                                     <div className="flex justify-between items-center pb-5">
                                         <h1>All Transaction</h1>
-                                        <div className="flex gap-1">
-                                            <a
-                                                className="btn bg-base-300 btn-sm rounded-sm"
-                                                href="/api/generateCsv"
+
+                                        <input
+                                            type="text"
+                                            className="input input-bordered input-sm rounded-sm text-base-content"
+                                            placeholder="Search..."
+                                            value={query}
+                                            onChange={(e) =>
+                                                setQuery(e.target.value)
+                                            }
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleFilter();
+                                                }
+                                            }}
+                                        />
+                                        {/* <div className="flex gap-2">
+                                            <input
+                                                type="file"
+                                                accept=".csv"
+                                                onChange={handleFileChange}
+                                            />
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={handleUpload}
                                             >
-                                                CSV
-                                            </a>
-                                            <a
-                                                className="btn bg-base-300 btn-sm rounded-sm"
-                                                href="/api/generateExcel"
-                                            >
-                                                EXCEL
-                                            </a>
-                                        </div>
+                                                Upload CSV
+                                            </button>
+                                        </div> */}
                                     </div>
                                     <TransactionTable />
                                 </div>

@@ -16,13 +16,14 @@ return new class extends Migration
             $table->string('student_number');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
+            $table->string('suffix')->nullable();
             $table->string('last_name');
             $table->string('contact_number')->nullable();
             $table->string('email')->nullable()->unique();
-            $table->foreignId('year_id')->constrained('years')->nullable(); // foreign key to the `years` table
-            $table->foreignId('bachelor_id')->constrained('bachelors')->nullable(); // foreign key to the `bachelors` table
+            $table->foreignId('year_id')->nullable();
+            $table->foreignId('bachelor_id')->nullable();
             $table->timestamps();
-            $table->softDeletes(); // Add SoftDeletes column
+            $table->softDeletes();
         });
     }
 
